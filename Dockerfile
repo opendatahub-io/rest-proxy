@@ -16,6 +16,7 @@
 # Stage 1: Create the developer image for the BUILDPLATFORM only
 ###############################################################################
 ARG GOLANG_VERSION=1.21
+ARG BUILD_BASE=develop
 FROM --platform=$BUILDPLATFORM registry.access.redhat.com/ubi8/go-toolset:$GOLANG_VERSION AS develop
 
 ARG PROTOC_VERSION=21.12
@@ -106,12 +107,18 @@ CMD /bin/bash
 ###############################################################################
 # Stage 2: Run the go build with BUILDPLATFORM's native go compiler
 ###############################################################################
-FROM --platform=$BUILDPLATFORM develop AS build
+FROM --platform=$BUILDPLATFORM $BUILD_BASE AS build
 
 LABEL image="build"
 
+USER root
+WORKDIR /opt/app
+
 # Copy the source
 COPY . ./
+
+# Download dependencies before copying the source so they will be cached
+RUN go mod download
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 # don't provide "default" values (e.g. 'ARG TARGETARCH=amd64') for non-buildx environments,
@@ -127,7 +134,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     GOARCH=${TARGETARCH:-amd64} \
     CGO_ENABLED=0 \
     GO111MODULE=on \
-    go mod tidy && go build -a -o /go/bin/server ./proxy/
+    go build -a -o /go/bin/server ./proxy/
 
 
 ###############################################################################
