@@ -84,6 +84,7 @@ COPY go.mod go.sum ./
 ENV PATH $HOME/go/bin:$PATH
 RUN true \
     && go get google.golang.org/grpc/cmd/protoc-gen-go-grpc \
+    && go mod download github.com/golang/glog \
     && go install google.golang.org/grpc/cmd/protoc-gen-go-grpc \
                   google.golang.org/protobuf/cmd/protoc-gen-go \
                   github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway \
