@@ -23,7 +23,7 @@ spec:
   - name: revision
     value: '{{revision}}'
   - name: output-image
-    value: quay.io/redhat-user-workloads/open-data-hub-tenant/rest-proxy-odh-poc:{{revision}}
+    value: quay.io/opendatahub/rest-proxy:konflux-poc
   - name: dockerfile
     value: Dockerfile
   - name: path-context
