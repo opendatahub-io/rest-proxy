@@ -141,7 +141,7 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 ###############################################################################
 # Stage 3: Copy binaries only to create the smallest final runtime image
 ###############################################################################
-FROM registry.access.redhat.com/ubi9/ubi-micro:9.5 as runtime
+FROM registry.access.redhat.com/ubi9/ubi-micro:9.6-1751366659 as runtime
 
 ARG USER=2000
 
