@@ -247,6 +247,8 @@ jobs:
             PR_NUMBER=$(echo "$EXISTING_PR" | jq -r '.number')
             PR_URL=$(echo "$EXISTING_PR" | jq -r '.url')
             echo "::notice::PR #$PR_NUMBER already exists for branch $BRANCH_NAME: $PR_URL"
+            echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
           else
             # Create PR with multi-line body
             PR_BODY="This PR updates the ODH release tag in the Konflux build configuration from \`${{ github.event.inputs.tag_name }}\` to \`${{ github.event.inputs.next_odh_tag }}\` for the next development cycle.
@@ -256,20 +258,17 @@ jobs:
 
             **Automated by:** Release workflow for ${{ github.event.inputs.tag_name }}"
 
-            PR_JSON=$(gh pr create \
+            PR_URL=$(gh pr create \
               --title "chore(konflux): Bump ODH release tag to ${{ github.event.inputs.next_odh_tag }}" \
               --body "$PR_BODY" \
               --base "${{ github.ref_name }}" \
-              --head "$BRANCH_NAME" \
-              --json number,url)
+              --head "$BRANCH_NAME")
 
-            PR_NUMBER=$(echo "$PR_JSON" | jq -r '.number')
-            PR_URL=$(echo "$PR_JSON" | jq -r '.url')
+            PR_NUMBER=$(echo "$PR_URL" | grep -oE '[0-9]+$')
             echo "::notice::PR created successfully: $PR_URL"
+            echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
           fi
-
-          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
-          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
 
       - name: Create workflow summary
         if: always()
