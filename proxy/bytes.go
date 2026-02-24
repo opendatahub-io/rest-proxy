@@ -76,13 +76,14 @@ func unmarshalNestedNumeric(target *[][]byte, depth int, data []byte) error {
 	j := 1
 	for _, b := range data {
 		include := true
-		if b == '[' {
+		switch b {
+		case '[':
 			d++
 			if d > depth {
 				return errors.New("invalid tensor data: array nesting does not match tensor shape")
 			}
 			include = d == depth
-		} else if b == ']' {
+		case ']':
 			include = d == depth
 			d--
 		}
