@@ -19,8 +19,6 @@ repos:
         log_file: .pre-commit.log
         entry: golangci-lint run
         exclude: ^(gen/)
-        args:
-          - --skip-dirs='^(gen/)'
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.4.1
     hooks:

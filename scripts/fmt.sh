@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+rm -f .pre-commit.log
 pre-commit run --all-files
 RETURN_CODE=$?
 ## cat this file for helping on identifying the root cause when some issue happens

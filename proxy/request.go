@@ -155,11 +155,12 @@ func (t *tensorDataUnmarshaller) UnmarshalJSON(data []byte) error {
 	var o, c int
 	j := 1
 	for _, b := range data {
-		if b == '[' {
+		switch b {
+		case '[':
 			o++
-		} else if b == ']' {
+		case ']':
 			c++
-		} else {
+		default:
 			data[j] = b
 			j++
 		}
